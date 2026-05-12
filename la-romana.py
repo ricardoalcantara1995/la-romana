@@ -3,3 +3,9 @@
 #MODULO DE VENTAS
 #CIERRE DE CAJA
 #CONTEO TOTAL DE PROVEEDORES
+
+
+
+a = "palabra"
+
+print(palabra)
