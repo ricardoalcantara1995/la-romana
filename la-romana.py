@@ -1,70 +1,92 @@
-#comenzando proyecto
-#MODULO DE INGRESO DE MERCADERIA
-def ingreso_mercaderia(entradas):
-    producto = input("Producto: ")
-    cantidad = int(input("Cantidad: "))
-    repartidor = input("Nombre del repartidor: ")
-    boleta = input("¿Dejó boleta? (S/N): ").upper() == "S"
+ventas = []           
+inventario = []       
 
-    entradas.append({
-        "producto": producto,
-        "cantidad": cantidad,
-        "repartidor": repartidor,
-        "boleta": boleta
-    })
-
-    print("Ingreso registrado correctamente")
-    
-ingreso_mercaderia()
-
-#MODULO DE VENTAS
-def registrar_venta(historial_ventas):
+def registrar_venta():
     venta = []
-    total_venta = 0
+    total = 0
+    respuesta = "S"
 
-    while True:
-        nombre = input("Nombre del producto: ")
+    while respuesta.upper() != "N":
+        producto = input("Producto: ")
         cantidad = int(input("Cantidad: "))
-        precio = float(input("Precio: "))
+        precio = float(input("Precio unitario: "))
 
         subtotal = cantidad * precio
-        total_venta += subtotal
+        total += subtotal
 
         venta.append({
-            "nombre": nombre,
+            "producto": producto,
             "cantidad": cantidad,
             "precio": precio,
             "subtotal": subtotal
         })
 
-        print(f"Subtotal: {subtotal}")
+        respuesta = input("¿Agregar otro producto? (S/N): ")
 
-        resp = input("¿Agregar otro producto? (S/N): ").upper()
-        if resp == "N":
+    metodo_pago = input("Método de pago (Efectivo/Tarjeta): ")
+    ventas.append({"items": venta, "total": total, "metodo_pago": metodo_pago})
+
+    print("\n=== Venta registrada ===")
+    print(f"Total a pagar: S/. {total:.2f}")
+    print(f"Método de pago: {metodo_pago}\n")
+
+
+def recepcion_mercaderia():
+    respuesta = "S"
+    while respuesta.upper() != "N":
+        proveedor = input("Proveedor: ")
+        producto = input("Producto: ")
+        cantidad = int(input("Cantidad: "))
+
+        inventario.append({
+            "proveedor": proveedor,
+            "producto": producto,
+            "cantidad": cantidad
+        })
+
+        respuesta = input("¿Agregar otra mercadería? (S/N): ")
+
+    print("\n=== Recepción registrada correctamente ===\n")
+
+
+def cierre_caja():
+    ingreso_total = sum(v["total"] for v in ventas)
+    print("\n=== Cierre de Caja ===")
+    print(f"Ingreso bruto total: S/. {ingreso_total:.2f}")
+    print(f"Cantidad de ventas: {len(ventas)}\n")
+
+
+def cierre_ingreso_proveedores():
+    print("\n=== Cierre de Ingreso de Proveedores ===")
+    for item in inventario:
+        print(f"- {item['proveedor']} | {item['producto']} | {item['cantidad']} unidades")
+    print()
+
+
+def menu():
+    while True:
+        print("\n===== MENÚ PRINCIPAL =====")
+        print("1. Venta")
+        print("2. Recepción de Mercadería")
+        print("3. Cierre de Caja")
+        print("4. Cierre de Ingreso de Proveedores")
+        print("5. Salir")
+
+        opc = input("Seleccione opción: ")
+
+        if opc == "1":
+            registrar_venta()
+        elif opc == "2":
+            recepcion_mercaderia()
+        elif opc == "3":
+            cierre_caja()
+        elif opc == "4":
+            cierre_ingreso_proveedores()
+        elif opc == "5":
+            print("Gracias por usar el sistema.")
             break
+        else:
+            print("Opción inválida. Intente nuevamente.\n")
 
-    print(f"Total de la venta: {total_venta}")
-
-    metodo_pago = input("Metodo de pago (Efectivo/Tarjeta): ")
-
-    historial_ventas.append({
-        "productos": venta,
-        "total": total_venta,
-        "metodo_pago": metodo_pago
-    })
-registrar_venta()
-
-#CIERRE DE CAJA
  
-def cierre_caja(historial_ventas):
-    ingreso_total = sum(v["total"] for v in historial_ventas)
-    cantidad_transacciones = len(historial_ventas)
-
-    print("Ingreso bruto total:", ingreso_total)
-    print("Cantidad total de ventas:", cantidad_transacciones)
-cierre_caja()
-
-
-#CONTEO TOTAL DE PROVEEDORES
-#CONTINUANDOgggggg
- 
+menu()
