@@ -24,11 +24,28 @@ def registrar_venta():
         respuesta = input("¿Agregar otro producto? (S/N): ")
 
     metodo_pago = input("Método de pago (Efectivo/Tarjeta): ")
-    ventas.append({"items": venta, "total": total, "metodo_pago": metodo_pago})
+
+    if metodo_pago.upper() == "EFECTIVO":
+        print(f"Total :{total:.2f}")
+        monto_cliente = float(input("Monto entregado por el cliente: "))
+        vuelto = monto_cliente - total
+        print(f"Vuelto: S/. {vuelto:.2f}")
+    else:
+        vuelto = 0
+
+    ventas.append({
+        "items": venta,
+        "total": total,
+        "metodo_pago": metodo_pago,
+        "vuelto": vuelto
+    })
 
     print("\n=== Venta registrada ===")
     print(f"Total a pagar: S/. {total:.2f}")
     print(f"Método de pago: {metodo_pago}\n")
+    venta = []
+    total = 0
+    respuesta = "S"
 
 
 def recepcion_mercaderia():
@@ -50,10 +67,13 @@ def recepcion_mercaderia():
 
 
 def cierre_caja():
-    ingreso_total = sum(v["total"] for v in ventas)
+    ingreso_total = 0
+    for v in ventas:
+        ingreso_total += v["total"]
     print("\n=== Cierre de Caja ===")
     print(f"Ingreso bruto total: S/. {ingreso_total:.2f}")
     print(f"Cantidad de ventas: {len(ventas)}\n")
+
 
 
 def cierre_ingreso_proveedores():
