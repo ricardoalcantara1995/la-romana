@@ -1,6 +1,20 @@
 ventas = []           
 inventario = []       
 
+def pedir_entero(mensaje):
+    while True:
+        try:
+            return int(input(mensaje))
+        except ValueError:
+            print("Error: ingrese un número entero válido.")
+
+def pedir_float(mensaje):
+    while True:
+        try:
+            return float(input(mensaje))
+        except ValueError:
+            print("Error: ingrese un número decimal válido.")
+
 def registrar_venta():
     venta = []
     total = 0
@@ -8,8 +22,8 @@ def registrar_venta():
 
     while respuesta.upper() != "N":
         producto = input("Producto: ")
-        cantidad = int(input("Cantidad: "))
-        precio = float(input("Precio unitario: "))
+        cantidad = pedir_entero("Cantidad (en kg o unidad): ")
+        precio = pedir_float("Precio unitario S/: ")
 
         subtotal = cantidad * precio
         total += subtotal
@@ -26,8 +40,8 @@ def registrar_venta():
     metodo_pago = input("Método de pago (Efectivo/Tarjeta): ")
 
     if metodo_pago.upper() == "EFECTIVO":
-        print(f"Total :{total:.2f}")
-        monto_cliente = float(input("Monto entregado por el cliente: "))
+        print(f"Total : S/. {total:.2f}")
+        monto_cliente = pedir_float("Monto entregado por el cliente: ")
         vuelto = monto_cliente - total
         print(f"Vuelto: S/. {vuelto:.2f}")
     else:
@@ -43,9 +57,6 @@ def registrar_venta():
     print("\n=== Venta registrada ===")
     print(f"Total a pagar: S/. {total:.2f}")
     print(f"Método de pago: {metodo_pago}\n")
-    venta = []
-    total = 0
-    respuesta = "S"
 
 
 def recepcion_mercaderia():
@@ -53,7 +64,7 @@ def recepcion_mercaderia():
     while respuesta.upper() != "N":
         proveedor = input("Proveedor: ")
         producto = input("Producto: ")
-        cantidad = int(input("Cantidad: "))
+        cantidad = pedir_entero("Cantidad: ")
 
         inventario.append({
             "proveedor": proveedor,
@@ -67,13 +78,28 @@ def recepcion_mercaderia():
 
 
 def cierre_caja():
-    ingreso_total = 0
-    for v in ventas:
-        ingreso_total += v["total"]
-    print("\n=== Cierre de Caja ===")
-    print(f"Ingreso bruto total: S/. {ingreso_total:.2f}")
-    print(f"Cantidad de ventas: {len(ventas)}\n")
+    print("\n=== CIERRE DE CAJA ===")
+    print("| Producto | Cant | Precio | Subtotal | Pago |")
+    print("|----------|------|--------|----------|------|")
 
+    ingreso_total = 0
+    efectivo_total = 0
+    tarjeta_total = 0
+
+    for v in ventas:
+        for item in v["items"]:
+            print(f"| {item['producto']} | {item['cantidad']} | S/. {item['precio']:.2f} | S/. {item['subtotal']:.2f} | {v['metodo_pago']} |")
+        ingreso_total += v["total"]
+        if v["metodo_pago"].upper() == "EFECTIVO":
+            efectivo_total += v["total"]
+        else:
+            tarjeta_total += v["total"]
+
+    print("\n--- Totales ---")
+    print(f"Ingreso bruto total: S/. {ingreso_total:.2f}")
+    print(f"Ventas en efectivo: S/. {efectivo_total:.2f}")
+    print(f"Ventas con tarjeta: S/. {tarjeta_total:.2f}")
+    print(f"Cantidad de ventas: {len(ventas)}\n")
 
 
 def cierre_ingreso_proveedores():
@@ -106,8 +132,6 @@ def menu():
             print("Gracias por usar el sistema.")
             break
         else:
-            print("Opción inválida. Intente nuevamente.\n   ")
+            print(" Opción inválida. Intente nuevamente.\n")
 
-   
 menu()
-print("Avigail")
