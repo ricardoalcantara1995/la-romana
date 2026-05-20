@@ -106,7 +106,8 @@ def menu():
             print("Gracias por usar el sistema.")
             break
         else:
-            print("Opción inválida. Intente nuevamente.\n")
+            print("Opción inválida. Intente nuevamente.\n   ")
 
- 
+   
 menu()
+print("Franny")
